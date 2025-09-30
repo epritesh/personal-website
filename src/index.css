@@ -4,49 +4,31 @@
 
 @layer base {
   body {
-    @apply bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 min-h-screen font-body;
+    @apply min-h-screen bg-slate-950 text-slate-100 font-body;
+  }
+}
+
+@layer components {
+  .section-title {
+    @apply text-2xl md:text-3xl font-semibold mb-6 text-brand-cyan;
   }
 }
 
 @layer utilities {
-  .text-gradient {
-    @apply bg-gradient-to-r from-vedic-orange to-vedic-saffron bg-clip-text text-transparent;
-  }
-  
-  .glass-effect {
-    @apply bg-white/80 backdrop-blur-lg border border-white/20 shadow-xl;
-  }
-  
-  .meditation-glow {
-    box-shadow: 0 0 30px rgba(255, 153, 51, 0.3);
+  .glass-panel {
+    @apply rounded-2xl border border-white/10 bg-white/5 backdrop-blur;
   }
 }
 
-/* Smooth animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
+@keyframes subtle-float {
+  0%, 100% {
     transform: translateY(0);
   }
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
   50% {
-    transform: translateY(-10px);
+    transform: translateY(-6px);
   }
 }
 
-.animate-fadeIn {
-  animation: fadeIn 1s ease-out;
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
+.animate-subtle-float {
+  animation: subtle-float 6s ease-in-out infinite;
 }

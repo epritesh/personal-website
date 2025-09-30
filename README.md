@@ -1,161 +1,75 @@
-# Daily Vedanta Inspiration 🪷
+# Pritesh · Software Engineering Portfolio
 
-A beautiful, modern web application that provides daily inspiration, prayers, and wisdom from Advaita Vedanta philosophy to support mental wellbeing and spiritual growth.
+This Vite + React single-page site showcases engineering impact, selected projects, and writing highlights for a senior front-end/product engineer. It is optimised for a modern developer aesthetic with TailwindCSS and Lucide icons, and deploys cleanly to Vercel.
 
-## ✨ Features
+> The previous **Daily Vedanta Inspiration** experience now lives on the `daily-vedanta` branch. Deploy that branch if you want the spiritual experience instead of the portfolio.
 
-- **Daily Wisdom**: Curated quotes and teachings from Advaita Vedanta masters including Adi Shankaracharya, Upanishads, and sacred texts
-- **Sacred Mantras**: Daily mantras with Sanskrit text, transliterations, meanings, and benefits
-- **Meditation Practices**: Guided spiritual practices including Self-Inquiry, Witness Consciousness, and more
-- **Philosophical Teachings**: Deep insights into Advaita Vedanta concepts with practical applications
-- **Beautiful UI**: Modern, calming design with smooth animations and a peaceful color palette
-- **Dark/Light Mode**: Toggle between light and dark themes for comfortable viewing
-- **Daily Rotation**: Content changes each day based on a curated collection of 30+ wisdom teachings
+## ✨ Highlights
 
-## 🎨 Design Philosophy
+- Hero section with availability CTA and quick theme toggle.
+- Impact snapshots, project cards, skill domains, and recent-role timeline.
+- Learning log tiles linked to Dev.to, plus certification badges.
+- Contact panel with quick links to email, LinkedIn, and GitHub.
+- Light and dark palettes with subtle gradient ornaments defined via Tailwind utilities.
 
-The website features:
-- Calming gradient backgrounds inspired by Eastern spirituality
-- Glassmorphism effects for a modern, elegant look
-- Smooth animations and transitions
-- Sanskrit typography for authentic presentation
-- Responsive design that works on all devices
-- Floating decorative elements for visual interest
+## 🧱 Tech Stack
 
-## 🚀 Getting Started
+- **React 18** with functional components.
+- **Vite** for fast local development and builds.
+- **Tailwind CSS** with a small custom palette (`brand-*` colors).
+- **Lucide React** icon set.
+- Deploy target: **Vercel** (works equally well on Netlify, GitHub Pages, etc.).
 
-### Prerequisites
+## 🚀 Local Development
 
-- Node.js (v16 or higher)
-- npm or yarn
-
-### Installation
-
-1. Navigate to the project directory:
 ```bash
+git clone https://github.com/epritesh/personal-website.git
 cd personal-website
-```
-
-2. Install dependencies:
-```bash
 npm install
-```
-
-3. Start the development server:
-```bash
 npm run dev
 ```
 
-4. Open your browser and visit `http://localhost:5173`
+Open `http://localhost:5173` to preview. The site supports hot module replacement by default.
 
-### Building for Production
-
-To create a production build:
+To ship a production bundle:
 
 ```bash
 npm run build
+npm run preview # optional preview of the build output
 ```
 
-The optimized files will be in the `dist` folder, ready for deployment.
+> If you work across Windows and WSL, reinstall dependencies (`npm install`) inside each environment so esbuild downloads the correct native binary.
 
-### Preview Production Build
-
-```bash
-npm run preview
-```
-
-## 📱 Usage
-
-The website automatically displays different content each day:
-
-1. **Daily Wisdom Tab**: View inspiring quotes from Advaita Vedanta masters with Sanskrit texts
-2. **Mantra Tab**: Learn and practice sacred mantras with their meanings and benefits
-3. **Practice Tab**: Explore meditation and contemplation practices
-4. **Teaching Tab**: Understand core Advaita Vedanta concepts with practical applications
-
-Toggle between light and dark modes using the sun/moon icon in the header.
-
-## 🧘 Content Sources
-
-The content draws from authentic Advaita Vedanta sources including:
-- Upanishads (Chandogya, Mandukya, Brihadaranyaka, Kena, Katha)
-- Bhagavad Gita
-- Adi Shankaracharya's works (Vivekachudamani, Nirvana Shatakam)
-- Ashtavakra Gita
-- Avadhuta Gita
-- Traditional Vedantic teachings
-
-## 🛠️ Technology Stack
-
-- **React 18** - Modern UI library
-- **Vite** - Fast build tool and dev server
-- **Tailwind CSS** - Utility-first CSS framework
-- **Lucide React** - Beautiful icon library
-- **Custom CSS** - Animations and special effects
-
-## 📂 Project Structure
+## 🗂️ Key Files
 
 ```
-personal-website/
-├── src/
-│   ├── data/
-│   │   └── vedantaContent.js    # All wisdom, mantras, practices, and teachings
-│   ├── App.jsx                   # Main application component
-│   ├── main.jsx                  # Application entry point
-│   └── index.css                 # Global styles and animations
-├── index.html                    # HTML template
-├── package.json                  # Dependencies and scripts
-├── tailwind.config.js            # Tailwind configuration
-├── vite.config.js                # Vite configuration
-└── README.md                     # This file
+src/
+├── App.jsx         # Portfolio content + layout
+├── index.css       # Tailwind layers and component helpers
+├── main.jsx        # React entry point
+└── services/…      # (Unused in main branch, kept for the Daily Vedanta variant)
 ```
 
-## 🎯 Customization
+Tailwind customisations live in `tailwind.config.js`. Fonts are loaded via `index.html` (Inter by default).
 
-### Adding New Content
+## 🔧 Customisation Guide
 
-Edit `src/data/vedantaContent.js` to add more:
-- Daily wisdom quotes
-- Mantras
-- Meditation practices
-- Philosophical teachings
+- **Projects & copy:** Edit the data arrays (`primaryProjects`, `skillDomains`, `timeline`, `learningLog`, `certifications`) near the top of `src/App.jsx`.
+- **Brand colours:** Adjust `brand-cyan`, `brand-indigo`, and `brand-purple` in `tailwind.config.js`.
+- **Section heading style:** Update the `.section-title` utility in `src/index.css`.
+- **Theme defaults:** Change the initial `isDarkMode` value in `App.jsx` if you prefer light mode by default.
 
-### Changing Colors
+## 🌐 Deployment Notes
 
-Modify the color scheme in `tailwind.config.js`:
-```js
-colors: {
-  'vedic-gold': '#D4AF37',
-  'vedic-orange': '#FF9933',
-  // ... add your colors
-}
-```
+1. Push the branch you want to deploy (`main` for the portfolio, `daily-vedanta` for the spiritual experience).
+2. On Vercel: import the GitHub repo, keep the defaults (`npm run build`, output `dist`).
+3. Add any public environment variables if future enhancements require them (`VITE_*`).
+4. For static hosts (GitHub Pages / Netlify), no server-side code is needed.
 
-### Adjusting Daily Rotation
+## 🤝 Contributing / Forking
 
-The content rotates based on the day of the year. You can modify the rotation logic in the `getTodayContent()` function in `vedantaContent.js`.
+Fork freely and adapt the content for your own portfolio. Please keep attribution or link back if you find the layout helpful.
 
-## 🌟 Features to Add (Future Enhancements)
+## 📜 License
 
-- User preferences for favorite teachings
-- Meditation timer
-- Journal for personal reflections
-- Audio pronunciation guides for Sanskrit mantras
-- Weekly/monthly themes
-- Share quotes on social media
-- Bookmark favorite content
-- Notification reminders
-
-## 📄 License
-
-This project is created for personal use and spiritual growth. Feel free to use and modify as needed.
-
-## 🙏 Acknowledgments
-
-Gratitude to the ancient sages and masters of Advaita Vedanta whose timeless wisdom continues to illuminate the path to Self-realization.
-
----
-
-**ॐ शान्तिः शान्तिः शान्तिः**  
-*Om Shanti Shanti Shanti*  
-Peace, Peace, Peace
+Released under the MIT License. See `LICENSE` if you add one; otherwise treat the code as permissive personal boilerplate.

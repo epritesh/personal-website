@@ -1,620 +1,408 @@
-import { useState, useEffect } from 'react'
-import { Sunrise, Heart, Sparkles, BookOpen, Sun, Moon, Flower2, PlayCircle, ExternalLink } from 'lucide-react'
-import { getTodayContent } from './data/vedantaContent'
-import { getRecommendedVideosByHandles, resolveChannelIdByHandle, getPlaylistsByChannel } from './services/youtube'
+import { useState } from 'react'
+import {
+  Github,
+  Linkedin,
+  Mail,
+  ExternalLink,
+  Sun,
+  Moon,
+  Cpu,
+  Rocket,
+  Code2,
+  Layers,
+  Cloud,
+  Calendar,
+  Award
+} from 'lucide-react'
+
+const primaryProjects = [
+  {
+    title: 'Edge Annotation Platform',
+    description:
+      'Realtime design feedback system with collaborative annotation, offline sync, and Figma plug-in integration.',
+    tags: ['React', 'Vite', 'WebRTC', 'Node.js'],
+    link: 'https://github.com/epritesh/edge-annotation'
+  },
+  {
+    title: 'DevOps Insights Dashboard',
+    description:
+      'Unified deployment health and DORA metrics with streaming logs, feature flags, and on-call context in one UI.',
+    tags: ['TypeScript', 'Fastify', 'TailwindCSS', 'PostgreSQL'],
+    link: 'https://github.com/epritesh/devops-insights'
+  },
+  {
+    title: 'LLM Pair Programmer',
+    description:
+      'Prompt engineering toolkit for codebases: context-aware suggestions, automated test hints, and change risk scoring.',
+    tags: ['Next.js', 'OpenAI', 'Prisma', 'Supabase'],
+    link: 'https://github.com/epritesh/llm-pair-programmer'
+  }
+]
+
+const skillDomains = [
+  {
+    icon: Cpu,
+    title: 'Frontend Systems',
+    items: ['React 18+', 'TypeScript', 'State charts', 'Design systems', 'Accessibility audits']
+  },
+  {
+    icon: Cloud,
+    title: 'Cloud & Edge',
+    items: ['Vercel', 'AWS Lambda', 'Cloudflare Workers', 'Supabase', 'CI/CD automation']
+  },
+  {
+    icon: Layers,
+    title: 'Backend Services',
+    items: ['Node.js', 'Fastify', 'tRPC', 'Prisma', 'Event-driven workflows']
+  },
+  {
+    icon: Rocket,
+    title: 'Product Velocity',
+    items: ['Lean discovery', 'OKR facilitation', 'Experiment design', 'Tech mentoring']
+  }
+]
+
+const timeline = [
+  {
+    period: '2023 — Present',
+    role: 'Senior Frontend Engineer · Aurora Analytics',
+    bullets: [
+      'Led rewrite to Vite + React Server Components; cut cold-start by 42%.',
+      'Built design tokens pipeline syncing Figma and Storybook automatically.',
+      'Mentored 4 engineers, introduced quarterly accessibility audits.'
+    ]
+  },
+  {
+    period: '2020 — 2023',
+    role: 'Full-Stack Engineer · CloudFlux',
+    bullets: [
+      'Shipped observability explorer ingesting 4M events/min with sub-second drilldowns.',
+      'Authored internal CLI tooling adopted by 6 squads and platform SRE team.',
+      'Created feature flag heuristics that reduced incident rollback time by 60%.'
+    ]
+  }
+]
+
+const learningLog = [
+  {
+    title: 'Bringing streaming UX to marketing dashboards',
+    date: 'Aug 2025',
+    link: 'https://dev.to/epritesh/streaming-dashboard-ux'
+  },
+  {
+    title: 'Modern test strategy for component-driven teams',
+    date: 'May 2025',
+    link: 'https://dev.to/epritesh/test-strategy'
+  },
+  {
+    title: 'Avoiding the state machine anti-pattern trap',
+    date: 'Jan 2025',
+    link: 'https://dev.to/epritesh/state-machines'
+  }
+]
+
+const certifications = [
+  {
+    title: 'AWS Certified Developer – Associate',
+    issuer: 'Amazon Web Services',
+    year: '2024'
+  },
+  {
+    title: 'Google Cloud Professional Cloud Developer',
+    issuer: 'Google Cloud',
+    year: '2023'
+  }
+]
+
+function classNames(...values) {
+  return values.filter(Boolean).join(' ')
+}
 
 function App() {
-  const [content, setContent] = useState(null)
-  const [isDarkMode, setIsDarkMode] = useState(false)
-  const [activeTab, setActiveTab] = useState('wisdom')
-  const [embedUrl, setEmbedUrl] = useState('')
-  const [ytVideos, setYtVideos] = useState([])
-  const [ytLoading, setYtLoading] = useState(false)
-  const [ytError, setYtError] = useState('')
-  const [nyPlaylists, setNyPlaylists] = useState([])
-  const [stPlaylists, setStPlaylists] = useState([])
-  const [embedPlaylistId, setEmbedPlaylistId] = useState('')
-  const hasYtKey = Boolean(import.meta.env.VITE_YT_API_KEY)
+  const [isDarkMode, setIsDarkMode] = useState(true)
 
-  // Known channel IDs for fallback embeds (uploads playlist = 'UU' + channelId.slice(2))
-  const VEDANTA_NY_CHANNEL_ID = 'UCZOKv_xnTzyLD9RJmbBUV9Q'
-  const SWAMIT_CHANNEL_ID = 'UC7i47784NqiOl244eGEJDew'
-  const uploadsId = (channelId) => (channelId?.startsWith('UC') ? 'UU' + channelId.slice(2) : '')
+  const rootClasses = classNames(
+    'min-h-screen transition-colors duration-500',
+    isDarkMode ? 'bg-slate-950 text-slate-100' : 'bg-slate-100 text-slate-900'
+  )
 
-  const extractVideoId = (url) => {
-    // Supports youtu.be/<id>, youtube.com/watch?v=<id>, youtube.com/embed/<id>
-    try {
-      const u = new URL(url)
-      if (u.hostname === 'youtu.be') return u.pathname.slice(1)
-      if (u.searchParams.get('v')) return u.searchParams.get('v')
-      const parts = u.pathname.split('/')
-      const embedIndex = parts.findIndex(p => p === 'embed')
-      if (embedIndex !== -1 && parts[embedIndex + 1]) return parts[embedIndex + 1]
-      return ''
-    } catch {
-      return ''
-    }
-  }
+  const cardClasses = classNames(
+    'rounded-2xl border p-6 transition',
+    isDarkMode
+      ? 'border-slate-800 bg-slate-900/80 hover:border-brand-cyan/40'
+      : 'border-slate-200 bg-white hover:border-brand-indigo/40'
+  )
 
-  useEffect(() => {
-    setContent(getTodayContent())
-  }, [])
-
-  // Load YouTube recommendations when the tab is opened
-  useEffect(() => {
-    const load = async () => {
-      if (activeTab !== 'videos' || ytVideos.length || ytLoading || !hasYtKey) return
-      setYtLoading(true)
-      setYtError('')
-      try {
-        const vids = await getRecommendedVideosByHandles(['@VedantaNY', '@SwamiT'], 8)
-        setYtVideos(vids)
-      } catch (e) {
-        setYtError(e?.message || 'Failed to load recommendations')
-      } finally {
-        setYtLoading(false)
-      }
-    }
-    load()
-  }, [activeTab, ytVideos.length, ytLoading, hasYtKey])
-
-  // Load all playlists for both channels (requires API key)
-  useEffect(() => {
-    if (activeTab !== 'videos' || !hasYtKey) return
-    const loadPlaylists = async () => {
-      try {
-        if (!nyPlaylists.length || !stPlaylists.length) {
-          const [nyId, stId] = await Promise.all([
-            resolveChannelIdByHandle('@VedantaNY'),
-            resolveChannelIdByHandle('@SwamiT'),
-          ])
-          const [ny, st] = await Promise.all([
-            getPlaylistsByChannel(nyId),
-            getPlaylistsByChannel(stId),
-          ])
-          setNyPlaylists(ny)
-          setStPlaylists(st)
-        }
-      } catch (e) {
-        // Reuse ytError banner area
-        setYtError(e?.message || 'Failed to load playlists')
-      }
-    }
-    loadPlaylists()
-  }, [activeTab, hasYtKey, nyPlaylists.length, stPlaylists.length])
-
-  if (!content) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-vedic-orange text-2xl">ॐ</div>
-      </div>
-    )
-  }
-
-  const tabs = [
-    { id: 'wisdom', label: 'Daily Wisdom', icon: Sparkles },
-    { id: 'mantra', label: 'Mantra', icon: Flower2 },
-    { id: 'practice', label: 'Practice', icon: Heart },
-    { id: 'teaching', label: 'Teaching', icon: BookOpen },
-    { id: 'videos', label: 'Recommendations', icon: PlayCircle }
-  ]
+  const accentBorder = isDarkMode
+    ? 'border-slate-800 hover:border-brand-cyan/60'
+    : 'border-slate-300 hover:border-brand-indigo/60'
 
   return (
-    <div className={`min-h-screen transition-colors duration-500 ${isDarkMode ? 'bg-gradient-to-br from-indigo-950 via-purple-950 to-slate-900' : 'bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50'}`}>
-      {/* Decorative elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-vedic-orange/10 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-vedic-saffron/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }}></div>
+    <div className={rootClasses}>
+      <div className="fixed inset-0 pointer-events-none">
+        <div
+          className={classNames(
+            'absolute top-[-10rem] right-[-6rem] w-[28rem] h-[28rem] rounded-full blur-3xl opacity-40',
+            isDarkMode ? 'bg-brand-cyan/60' : 'bg-brand-indigo/40'
+          )}
+        />
+        <div
+          className={classNames(
+            'absolute bottom-[-8rem] left-[-4rem] w-[26rem] h-[26rem] rounded-full blur-3xl opacity-40',
+            isDarkMode ? 'bg-brand-purple/60' : 'bg-brand-cyan/40'
+          )}
+        />
       </div>
 
-      {/* Header */}
-      <header className="relative z-10 container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between max-w-6xl mx-auto">
-          <div className="flex items-center space-x-4">
-            <div className="text-4xl animate-float">🪷</div>
-            <div>
-              <h1 className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                Daily Vedanta
-              </h1>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                Wisdom from Advaita Philosophy
-              </p>
+      <header className="relative z-10 border-b border-white/5">
+        <div className="container mx-auto px-6 py-10 flex flex-wrap items-center justify-between gap-6">
+          <div>
+            <span className="inline-flex items-center gap-2 text-sm uppercase tracking-[0.2em] text-brand-cyan font-semibold">
+              <Code2 size={16} /> Pritesh · Software Engineer
+            </span>
+            <h1 className="text-3xl sm:text-4xl font-bold mt-3 max-w-xl leading-tight">
+              Building fast, resilient product experiences for data-heavy teams.
+            </h1>
+            <p className="mt-4 max-w-2xl text-base sm:text-lg text-slate-400">
+              I partner with product, design, and platform teams to deliver thoughtful developer platforms, observability tools, and delightful frontend systems.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a
+                className="px-5 py-2.5 rounded-full bg-brand-cyan text-slate-950 font-medium shadow hover:-translate-y-0.5 transition-transform"
+                href="mailto:epritesh@gmail.com"
+              >
+                Book a pairing session
+              </a>
+              <a
+                className={classNames('px-5 py-2.5 rounded-full border font-medium transition-colors', accentBorder)}
+                href="https://github.com/epritesh"
+                target="_blank"
+                rel="noreferrer"
+              >
+                View GitHub
+              </a>
             </div>
           </div>
-          <button
-            onClick={() => setIsDarkMode(!isDarkMode)}
-            className={`p-3 rounded-full transition-all ${isDarkMode ? 'bg-yellow-400 text-gray-900' : 'bg-indigo-900 text-white'} hover:scale-110`}
-          >
-            {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-          </button>
+
+          <div className="flex flex-col items-end gap-4">
+            <button
+              onClick={() => setIsDarkMode((prev) => !prev)}
+              className={classNames('p-3 rounded-full border transition', accentBorder)}
+              aria-label="Toggle theme"
+            >
+              {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+            <div
+              className={classNames(
+                'rounded-2xl border px-5 py-4 text-sm backdrop-blur',
+                isDarkMode ? 'border-slate-800 bg-white/5' : 'border-white/70 bg-white/60'
+              )}
+            >
+              <div className="font-semibold text-sm text-brand-cyan">Availability</div>
+              <div>Accepting part-time consulting for DX tooling & data viz.</div>
+            </div>
+          </div>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="relative z-10 container mx-auto px-4 pb-16">
-        <div className="max-w-4xl mx-auto">
-          {/* Date Banner */}
-          <div className="text-center mb-8 animate-fadeIn">
-            <div className={`inline-flex items-center space-x-2 px-6 py-3 rounded-full ${isDarkMode ? 'bg-white/10 backdrop-blur-md border border-white/20' : 'glass-effect'}`}>
-              <Sunrise className="text-vedic-orange" size={20} />
-              <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-700'}`}>
-                {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-              </span>
-            </div>
+      <main className="relative z-10 container mx-auto px-6 py-16 space-y-20">
+        <section>
+          <h2 className="section-title">Impact Snapshots</h2>
+          <div className="grid gap-6 md:grid-cols-3">
+            {[{
+              title: '42% faster builds',
+              detail: 'Re-architected modular build pipeline with Vite + PNPM workspaces.'
+            }, {
+              title: '99.95% uptime',
+              detail: 'Rolled out synthetic monitoring with GitOps rollbacks and incident runbooks.'
+            }, {
+              title: 'Mentored 12 devs',
+              detail: 'Facilitated weekly architecture reviews and pairing rotations.'
+            }].map((card) => (
+              <div key={card.title} className={classNames(cardClasses, 'shadow-sm')}>
+                <h3 className="text-xl font-semibold">{card.title}</h3>
+                <p className="mt-3 text-sm text-slate-400">{card.detail}</p>
+              </div>
+            ))}
           </div>
+        </section>
 
-          {/* Tab Navigation */}
-          <div className="flex flex-wrap justify-center gap-3 mb-8 animate-fadeIn" style={{ animationDelay: '0.2s' }}>
-            {tabs.map(tab => {
-              const Icon = tab.icon
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center space-x-2 px-6 py-3 rounded-xl transition-all duration-300 ${
-                    activeTab === tab.id
-                      ? isDarkMode
-                        ? 'bg-gradient-to-r from-vedic-orange to-vedic-saffron text-white shadow-lg scale-105'
-                        : 'bg-gradient-to-r from-vedic-orange to-vedic-saffron text-white shadow-lg scale-105'
-                      : isDarkMode
-                        ? 'bg-white/10 backdrop-blur-md text-white hover:bg-white/20'
-                        : 'bg-white/60 backdrop-blur-sm text-gray-700 hover:bg-white/80'
-                  }`}
+        <section>
+          <h2 className="section-title">Selected Projects</h2>
+          <div className="grid gap-6">
+            {primaryProjects.map((project) => (
+              <div key={project.title} className={classNames(cardClasses, 'flex flex-col md:flex-row md:items-start md:justify-between gap-6')}>
+                <div className="space-y-3">
+                  <h3 className="text-2xl font-semibold">{project.title}</h3>
+                  <p className="text-slate-400 text-sm leading-relaxed">{project.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {project.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className={classNames(
+                          'px-3 py-1 rounded-full text-xs font-medium',
+                          isDarkMode ? 'bg-slate-800 text-slate-100' : 'bg-slate-100 text-slate-700'
+                        )}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <a
+                  href={project.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="self-start inline-flex items-center gap-2 text-sm font-medium text-brand-cyan hover:underline"
                 >
-                  <Icon size={18} />
-                  <span className="font-medium">{tab.label}</span>
-                </button>
-              )
-            })}
+                  Explore repo <ExternalLink size={16} />
+                </a>
+              </div>
+            ))}
           </div>
+        </section>
 
-          {/* Content Cards */}
+        <section>
+          <h2 className="section-title">Expertise</h2>
+          <div className="grid gap-6 md:grid-cols-2">
+            {skillDomains.map((domain) => (
+              <div key={domain.title} className={cardClasses}>
+                <div className="flex items-center gap-3">
+                  <div className="rounded-xl bg-brand-cyan/10 text-brand-cyan p-2 w-fit">
+                    <domain.icon size={22} />
+                  </div>
+                  <h3 className="text-xl font-semibold">{domain.title}</h3>
+                </div>
+                <ul className="mt-4 space-y-2 text-sm text-slate-400">
+                  {domain.items.map((item) => (
+                    <li key={item}>• {item}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h2 className="section-title">Recent Roles</h2>
           <div className="space-y-6">
-            {/* Daily Wisdom Card */}
-            {activeTab === 'wisdom' && (
-              <div className={`p-8 rounded-2xl animate-fadeIn ${isDarkMode ? 'bg-white/10 backdrop-blur-md border border-white/20' : 'glass-effect'}`}>
-                <div className="flex items-center space-x-3 mb-6">
-                  <Sparkles className="text-vedic-orange" size={28} />
-                  <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                    Today's Wisdom
-                  </h2>
+            {timeline.map((entry) => (
+              <div key={entry.role} className={cardClasses}>
+                <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-slate-400">
+                  <span className="inline-flex items-center gap-2 font-semibold text-brand-cyan">
+                    <Calendar size={14} /> {entry.period}
+                  </span>
+                  <span>{entry.role}</span>
                 </div>
-                
-                <div className="space-y-6">
-                  <div className={`text-xl leading-relaxed italic ${isDarkMode ? 'text-gray-100' : 'text-gray-800'}`}>
-                    "{content.wisdom.text}"
-                  </div>
-                  
-                  {content.wisdom.sanskrit && (
-                    <div className={`text-center py-4 px-6 rounded-xl ${isDarkMode ? 'bg-white/5' : 'bg-gradient-to-r from-orange-100 to-amber-100'}`}>
-                      <div className={`text-2xl font-sanskrit mb-2 ${isDarkMode ? 'text-vedic-gold' : 'text-vedic-orange'}`}>
-                        {content.wisdom.sanskrit}
-                      </div>
-                      <div className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                        Sanskrit Text
-                      </div>
-                    </div>
-                  )}
-                  
-                  <div className={`flex items-center justify-between pt-4 border-t ${isDarkMode ? 'border-white/10' : 'border-gray-200'}`}>
-                    <div>
-                      <div className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                        — {content.wisdom.author}
-                      </div>
-                      <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        {content.wisdom.context}
-                      </div>
-                    </div>
-                    <Flower2 className="text-vedic-orange opacity-50" size={32} />
-                  </div>
-                </div>
-
-                {/* All Playlists */}
-                <div className="mt-10 space-y-8">
-                  <h3 className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>All Playlists</h3>
-
-                  {/* API-based listing */}
-                  {hasYtKey ? (
-                    <>
-                      {/* VedantaNY Playlists */}
-                      <div>
-                        <div className={`mb-3 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>Vedanta Society of New York</div>
-                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                          {nyPlaylists.map(p => (
-                            <button
-                              key={p.id}
-                              onClick={() => { setEmbedPlaylistId(p.id); setEmbedUrl('') }}
-                              className={`text-left rounded-xl overflow-hidden border transition hover:shadow-lg ${isDarkMode ? 'border-white/10 bg-white/5' : 'border-gray-200 bg-white'}`}
-                            >
-                              <div className="aspect-video w-full overflow-hidden">
-                                <img src={p.thumbnail} alt={p.title} className="w-full h-full object-cover" />
-                              </div>
-                              <div className="p-3">
-                                <div className={`font-medium line-clamp-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{p.title}</div>
-                                <div className={`text-sm mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{p.count} videos</div>
-                              </div>
-                            </button>
-                          ))}
-                          {!nyPlaylists.length && (
-                            <div className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>No playlists found.</div>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* SwamiT Playlists */}
-                      <div>
-                        <div className={`mb-3 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>Swami Tadatmananda</div>
-                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                          {stPlaylists.map(p => (
-                            <button
-                              key={p.id}
-                              onClick={() => { setEmbedPlaylistId(p.id); setEmbedUrl('') }}
-                              className={`text-left rounded-xl overflow-hidden border transition hover:shadow-lg ${isDarkMode ? 'border-white/10 bg-white/5' : 'border-gray-200 bg-white'}`}
-                            >
-                              <div className="aspect-video w-full overflow-hidden">
-                                <img src={p.thumbnail} alt={p.title} className="w-full h-full object-cover" />
-                              </div>
-                              <div className="p-3">
-                                <div className={`font-medium line-clamp-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{p.title}</div>
-                                <div className={`text-sm mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{p.count} videos</div>
-                              </div>
-                            </button>
-                          ))}
-                          {!stPlaylists.length && (
-                            <div className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>No playlists found.</div>
-                          )}
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    // Fallback without API key: embed the Uploads playlists for both channels
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <div>
-                        <div className={`mb-2 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>Uploads — Vedanta Society of New York</div>
-                        <div className="aspect-video w-full overflow-hidden rounded-xl border border-black/10">
-                          <iframe
-                            className="w-full h-full"
-                            src={`https://www.youtube-nocookie.com/embed/videoseries?list=${uploadsId(VEDANTA_NY_CHANNEL_ID)}`}
-                            title="VedantaNY uploads"
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            allowFullScreen
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <div className={`mb-2 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>Uploads — Swami Tadatmananda</div>
-                        <div className="aspect-video w-full overflow-hidden rounded-xl border border-black/10">
-                          <iframe
-                            className="w-full h-full"
-                            src={`https://www.youtube-nocookie.com/embed/videoseries?list=${uploadsId(SWAMIT_CHANNEL_ID)}`}
-                            title="Swami T uploads"
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            allowFullScreen
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
+                <ul className="mt-4 space-y-2 text-sm text-slate-400">
+                  {entry.bullets.map((bullet) => (
+                    <li key={bullet}>• {bullet}</li>
+                  ))}
+                </ul>
               </div>
-            )}
-
-            {/* Mantra Card */}
-            {activeTab === 'mantra' && (
-              <div className={`p-8 rounded-2xl animate-fadeIn ${isDarkMode ? 'bg-white/10 backdrop-blur-md border border-white/20' : 'glass-effect'}`}>
-                <div className="flex items-center space-x-3 mb-6">
-                  <Flower2 className="text-vedic-orange" size={28} />
-                  <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                    Today's Mantra
-                  </h2>
-                </div>
-                
-                <div className="space-y-6">
-                  <div className={`text-center py-8 px-6 rounded-xl ${isDarkMode ? 'bg-gradient-to-br from-purple-900/40 to-indigo-900/40' : 'bg-gradient-to-br from-orange-100 to-amber-100'}`}>
-                    <div className={`text-5xl font-sanskrit mb-4 ${isDarkMode ? 'text-vedic-gold' : 'text-vedic-orange'}`}>
-                      {content.mantra.sanskrit}
-                    </div>
-                    <div className={`text-xl font-medium ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                      {content.mantra.transliteration}
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h3 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                      Meaning:
-                    </h3>
-                    <p className={`text-lg leading-relaxed ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
-                      {content.mantra.meaning}
-                    </p>
-                  </div>
-                  
-                  <div className={`p-4 rounded-xl ${isDarkMode ? 'bg-white/5' : 'bg-teal-50'}`}>
-                    <h3 className={`font-semibold mb-2 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                      <Heart className="mr-2 text-vedic-orange" size={18} />
-                      Benefit:
-                    </h3>
-                    <p className={`${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
-                      {content.mantra.benefit}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Practice Card */}
-            {activeTab === 'practice' && (
-              <div className={`p-8 rounded-2xl animate-fadeIn ${isDarkMode ? 'bg-white/10 backdrop-blur-md border border-white/20' : 'glass-effect'}`}>
-                <div className="flex items-center space-x-3 mb-6">
-                  <Heart className="text-vedic-orange" size={28} />
-                  <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                    Today's Practice
-                  </h2>
-                </div>
-                
-                <div className="space-y-6">
-                  <div>
-                    <h3 className={`text-xl font-bold mb-3 ${isDarkMode ? 'text-vedic-gold' : 'text-vedic-orange'}`}>
-                      {content.practice.title}
-                    </h3>
-                    <div className={`inline-block px-4 py-2 rounded-full text-sm font-medium mb-4 ${isDarkMode ? 'bg-white/10 text-gray-200' : 'bg-orange-100 text-orange-800'}`}>
-                      Duration: {content.practice.duration}
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h4 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                      How to Practice:
-                    </h4>
-                    <p className={`text-lg leading-relaxed ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
-                      {content.practice.description}
-                    </p>
-                  </div>
-                  
-                  <div className={`p-4 rounded-xl ${isDarkMode ? 'bg-gradient-to-r from-green-900/30 to-teal-900/30' : 'bg-gradient-to-r from-green-50 to-teal-50'}`}>
-                    <h4 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                      Benefit:
-                    </h4>
-                    <p className={`${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
-                      {content.practice.benefit}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Teaching Card */}
-            {activeTab === 'teaching' && (
-              <div className={`p-8 rounded-2xl animate-fadeIn ${isDarkMode ? 'bg-white/10 backdrop-blur-md border border-white/20' : 'glass-effect'}`}>
-                <div className="flex items-center space-x-3 mb-6">
-                  <BookOpen className="text-vedic-orange" size={28} />
-                  <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                    Today's Teaching
-                  </h2>
-                </div>
-                
-                <div className="space-y-6">
-                  <div>
-                    <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-vedic-gold' : 'text-vedic-orange'}`}>
-                      {content.teaching.title}
-                    </h3>
-                    <p className={`text-lg leading-relaxed ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
-                      {content.teaching.content}
-                    </p>
-                  </div>
-                  
-                  <div className={`p-5 rounded-xl border-l-4 border-vedic-orange ${isDarkMode ? 'bg-white/5' : 'bg-amber-50'}`}>
-                    <h4 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                      💡 Apply This Today:
-                    </h4>
-                    <p className={`${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
-                      {content.teaching.practice}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Recommendations / Videos Card */}
-            {activeTab === 'videos' && (
-              <div className={`p-8 rounded-2xl animate-fadeIn ${isDarkMode ? 'bg-white/10 backdrop-blur-md border border-white/20' : 'glass-effect'}`}>
-                <div className="flex items-center space-x-3 mb-6">
-                  <PlayCircle className="text-vedic-orange" size={28} />
-                  <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                    Recommendations
-                  </h2>
-                </div>
-
-                {/* Latest Videos (always embedded on the page) */}
-                <div className="mb-8">
-                  <h3 className={`font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Latest videos</h3>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <div className={`mb-2 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>Vedanta Society of New York</div>
-                      <div className="aspect-video w-full overflow-hidden rounded-xl border border-black/10">
-                        <iframe
-                          className="w-full h-full"
-                          src={`https://www.youtube-nocookie.com/embed/videoseries?list=${uploadsId(VEDANTA_NY_CHANNEL_ID)}`}
-                          title="VedantaNY uploads"
-                          frameBorder="0"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                          allowFullScreen
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <div className={`mb-2 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>Swami Tadatmananda</div>
-                      <div className="aspect-video w-full overflow-hidden rounded-xl border border-black/10">
-                        <iframe
-                          className="w-full h-full"
-                          src={`https://www.youtube-nocookie.com/embed/videoseries?list=${uploadsId(SWAMIT_CHANNEL_ID)}`}
-                          title="Swami T uploads"
-                          frameBorder="0"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                          allowFullScreen
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Channel Links */}
-                <div className="grid md:grid-cols-2 gap-6 mb-8">
-                  <div className={`${isDarkMode ? 'bg-white/5' : 'bg-white/70'} rounded-xl p-5 border ${isDarkMode ? 'border-white/10' : 'border-white/50'} transition` }>
-                    <div className="flex items-center mb-3">
-                      <div className="text-3xl mr-3">🕉️</div>
-                      <div>
-                        <h3 className={`font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Vedanta Society of New York</h3>
-                        <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-600'} text-sm`}>Talks, lectures, and guided wisdom grounded in traditional Advaita Vedanta.</p>
-                      </div>
-                    </div>
-                    <div className="flex flex-wrap gap-3">
-                      <a href="https://www.youtube.com/@VedantaNY" target="_blank" rel="noreferrer" className="inline-flex items-center px-4 py-2 rounded-lg bg-vedic-orange text-white hover:opacity-90">
-                        Visit Channel <ExternalLink size={16} className="ml-2" />
-                      </a>
-                      <a href="https://www.youtube.com/@VedantaNY/videos" target="_blank" rel="noreferrer" className={`${isDarkMode ? 'bg-white/10 text-white' : 'bg-gray-100 text-gray-800'} inline-flex items-center px-4 py-2 rounded-lg hover:opacity-90`}>
-                        All Videos <ExternalLink size={16} className="ml-2" />
-                      </a>
-                      <a href="https://www.youtube.com/@VedantaNY/playlists" target="_blank" rel="noreferrer" className={`${isDarkMode ? 'bg-white/10 text-white' : 'bg-gray-100 text-gray-800'} inline-flex items-center px-4 py-2 rounded-lg hover:opacity-90`}>
-                        Playlists <ExternalLink size={16} className="ml-2" />
-                      </a>
-                    </div>
-                  </div>
-
-                  <div className={`${isDarkMode ? 'bg-white/5' : 'bg-white/70'} rounded-xl p-5 border ${isDarkMode ? 'border-white/10' : 'border-white/50'} transition` }>
-                    <div className="flex items-center mb-3">
-                      <div className="text-3xl mr-3">🪷</div>
-                      <div>
-                        <h3 className={`font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Swami Tadatmananda</h3>
-                        <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-600'} text-sm`}>Clear, modern explanations of Vedanta, Upanishads, and the Gita.</p>
-                      </div>
-                    </div>
-                    <div className="flex flex-wrap gap-3">
-                      <a href="https://www.youtube.com/@SwamiT" target="_blank" rel="noreferrer" className="inline-flex items-center px-4 py-2 rounded-lg bg-vedic-orange text-white hover:opacity-90">
-                        Visit Channel <ExternalLink size={16} className="ml-2" />
-                      </a>
-                      <a href="https://www.youtube.com/@SwamiT/videos" target="_blank" rel="noreferrer" className={`${isDarkMode ? 'bg-white/10 text-white' : 'bg-gray-100 text-gray-800'} inline-flex items-center px-4 py-2 rounded-lg hover:opacity-90`}>
-                        All Videos <ExternalLink size={16} className="ml-2" />
-                      </a>
-                      <a href="https://www.youtube.com/@SwamiT/playlists" target="_blank" rel="noreferrer" className={`${isDarkMode ? 'bg-white/10 text-white' : 'bg-gray-100 text-gray-800'} inline-flex items-center px-4 py-2 rounded-lg hover:opacity-90`}>
-                        Playlists <ExternalLink size={16} className="ml-2" />
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Optional Embed (single video or playlist) */}
-                <div className={`${isDarkMode ? 'bg-white/5' : 'bg-white/70'} rounded-xl p-5 border ${isDarkMode ? 'border-white/10' : 'border-white/50'}`}>
-                  <h3 className={`font-semibold mb-3 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                    <PlayCircle size={18} className="mr-2 text-vedic-orange" />
-                    Embed a YouTube video (paste URL) or click a playlist below
-                  </h3>
-                  <div className="flex flex-col md:flex-row gap-3">
-                    <input
-                      type="url"
-                      placeholder="https://www.youtube.com/watch?v=..."
-                      value={embedUrl}
-                      onChange={(e) => setEmbedUrl(e.target.value)}
-                      className={`flex-1 px-4 py-3 rounded-lg outline-none ${isDarkMode ? 'bg-white/10 text-white placeholder-gray-400' : 'bg-white text-gray-800 placeholder-gray-500'} border ${isDarkMode ? 'border-white/10' : 'border-gray-200'}`}
-                    />
-                    <button
-                      onClick={() => {
-                        try {
-                          localStorage.removeItem(`yt_recs_${new Date().toISOString().slice(0,10)}`)
-                        } catch {}
-                        setYtVideos([])
-                        setYtLoading(false)
-                        setYtError('')
-                        setEmbedPlaylistId('')
-                      }}
-                      className={`px-4 py-3 rounded-lg font-medium ${isDarkMode ? 'bg-white/10 text-white' : 'bg-gray-100 text-gray-800'} hover:opacity-90`}
-                    >
-                      Refresh Picks
-                    </button>
-                  </div>
-                  {extractVideoId(embedUrl) && (
-                    <div className="mt-5 aspect-video w-full overflow-hidden rounded-xl border border-black/10">
-                      <iframe
-                        className="w-full h-full"
-                        src={`https://www.youtube-nocookie.com/embed/${extractVideoId(embedUrl)}`}
-                        title="YouTube video player"
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowFullScreen
-                      />
-                    </div>
-                  )}
-                  {embedPlaylistId && !extractVideoId(embedUrl) && (
-                    <div className="mt-5 aspect-video w-full overflow-hidden rounded-xl border border-black/10">
-                      <iframe
-                        className="w-full h-full"
-                        src={`https://www.youtube-nocookie.com/embed/videoseries?list=${embedPlaylistId}`}
-                        title="YouTube playlist player"
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowFullScreen
-                      />
-                    </div>
-                  )}
-                  {!extractVideoId(embedUrl) && (
-                    <p className={`mt-3 text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                      Paste any YouTube video URL or click a playlist card below to embed it here.
-                    </p>
-                  )}
-                </div>
-
-                {/* Popular Picks Grid (only when API key is present) */}
-                {hasYtKey && (
-                  <div className="mt-8">
-                  <h3 className={`font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Popular picks today</h3>
-                  {ytLoading && (
-                    <div className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Loading videos…</div>
-                  )}
-                  {ytError && (
-                    <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-red-900/30 text-red-200' : 'bg-red-50 text-red-700'}`}>
-                      {ytError} — add VITE_YT_API_KEY to .env and restart the dev server.
-                    </div>
-                  )}
-                  {!ytLoading && !ytError && (
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                      {ytVideos.map(v => (
-                        <button
-                          key={v.id}
-                          onClick={() => setEmbedUrl(v.url)}
-                          className={`text-left rounded-xl overflow-hidden border transition hover:shadow-lg ${isDarkMode ? 'border-white/10 bg-white/5' : 'border-gray-200 bg-white'}`}
-                        >
-                          <div className="aspect-video w-full overflow-hidden">
-                            <img src={v.thumbnail} alt={v.title} className="w-full h-full object-cover" />
-                          </div>
-                          <div className="p-3">
-                            <div className={`font-medium line-clamp-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{v.title}</div>
-                            <div className={`text-sm mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{v.channelTitle}</div>
-                          </div>
-                        </button>
-                      ))}
-                      {!ytVideos.length && (
-                        <div className={`${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>No videos yet. Try Refresh Picks.</div>
-                      )}
-                    </div>
-                  )}
-                  </div>
-                )}
-              </div>
-            )}
+            ))}
           </div>
+        </section>
 
-          {/* Footer Quote */}
-          <div className="mt-12 text-center animate-fadeIn" style={{ animationDelay: '0.4s' }}>
-            <div className={`text-3xl mb-3 ${isDarkMode ? 'text-vedic-gold' : 'text-vedic-orange'}`}>
-              ॐ
+        <section>
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+            <h2 className="section-title">Learning Log</h2>
+            <a
+              href="https://dev.to/epritesh"
+              className="inline-flex items-center gap-2 text-sm font-medium text-brand-cyan hover:underline"
+              target="_blank"
+              rel="noreferrer"
+            >
+              All posts <ExternalLink size={16} />
+            </a>
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {learningLog.map((post) => (
+              <a
+                key={post.title}
+                href={post.link}
+                target="_blank"
+                rel="noreferrer"
+                className={classNames(cardClasses, 'hover:-translate-y-1')}
+              >
+                <div className="text-xs uppercase tracking-widest text-brand-cyan">{post.date}</div>
+                <h3 className="text-lg font-semibold mt-3">{post.title}</h3>
+                <span className="inline-flex items-center gap-2 text-sm text-brand-cyan mt-4">
+                  Read <ExternalLink size={14} />
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h2 className="section-title">Credentials</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            {certifications.map((cert) => (
+              <div
+                key={cert.title}
+                className={classNames('rounded-2xl border p-5 flex items-center gap-3', isDarkMode ? 'border-slate-800 bg-slate-900/80' : 'border-slate-200 bg-white')}
+              >
+                <div className="p-2 rounded-xl bg-brand-cyan/10 text-brand-cyan">
+                  <Award size={20} />
+                </div>
+                <div>
+                  <div className="font-semibold">{cert.title}</div>
+                  <div className="text-xs text-slate-400">{cert.issuer} · {cert.year}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <div
+            className={classNames(
+              'rounded-2xl border p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6',
+              isDarkMode
+                ? 'border-slate-800 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950'
+                : 'border-slate-200 bg-gradient-to-r from-white via-white to-slate-100'
+            )}
+          >
+            <div>
+              <h2 className="text-2xl font-semibold">Let’s ship something together.</h2>
+              <p className="mt-3 text-sm text-slate-400 max-w-xl">
+                I love helping teams untangle complex UX flows, harden their build pipelines, and level up developer experience. If you have a challenge in that space, reach out.
+              </p>
             </div>
-            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              "The Self is the same in all beings" — Bhagavad Gita
-            </p>
+            <div className="flex flex-wrap gap-3">
+              <a
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-cyan text-slate-950 font-medium shadow"
+                href="mailto:epritesh@gmail.com"
+              >
+                <Mail size={16} /> Email me
+              </a>
+              <a
+                className={classNames('inline-flex items-center gap-2 px-5 py-2.5 rounded-full border font-medium transition', accentBorder)}
+                href="https://www.linkedin.com/in/epritesh/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Linkedin size={16} /> Connect
+              </a>
+              <a
+                className={classNames('inline-flex items-center gap-2 px-5 py-2.5 rounded-full border font-medium transition', accentBorder)}
+                href="https://github.com/epritesh"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Github size={16} /> GitHub
+              </a>
+            </div>
           </div>
-        </div>
+        </section>
       </main>
+
+      <footer className="relative z-10 border-t border-white/5 py-8">
+        <div className="container mx-auto px-6 text-sm text-slate-500">
+          Built with React, Vite, and TailwindCSS. Deployed on Vercel.
+        </div>
+      </footer>
     </div>
   )
 }
