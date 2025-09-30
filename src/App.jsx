@@ -1,3 +1,4 @@
+
 import { useState } from 'react'
 import {
   Github,
@@ -17,100 +18,106 @@ import {
 
 const primaryProjects = [
   {
-    title: 'Edge Annotation Platform',
+    title: 'Dev Journal',
     description:
-      'Realtime design feedback system with collaborative annotation, offline sync, and Figma plug-in integration.',
-    tags: ['React', 'Vite', 'WebRTC', 'Node.js'],
-    link: 'https://github.com/epritesh/edge-annotation'
+      'A markdown-powered notebook I built to log daily lessons, useful code snippets, and questions for mentors.',
+    tags: ['React', 'Markdown', 'LocalStorage'],
+    link: 'https://github.com/epritesh/dev-journal'
   },
   {
-    title: 'DevOps Insights Dashboard',
+    title: 'Weather Dashboard',
     description:
-      'Unified deployment health and DORA metrics with streaming logs, feature flags, and on-call context in one UI.',
-    tags: ['TypeScript', 'Fastify', 'TailwindCSS', 'PostgreSQL'],
-    link: 'https://github.com/epritesh/devops-insights'
+      'Fetches live OpenWeather data, shows responsive cards, and helped me learn data fetching, loaders, and error states.',
+    tags: ['Vite', 'TailwindCSS', 'REST APIs'],
+    link: 'https://github.com/epritesh/weather-dashboard'
   },
   {
-    title: 'LLM Pair Programmer',
+    title: 'Focus Timer',
     description:
-      'Prompt engineering toolkit for codebases: context-aware suggestions, automated test hints, and change risk scoring.',
-    tags: ['Next.js', 'OpenAI', 'Prisma', 'Supabase'],
-    link: 'https://github.com/epritesh/llm-pair-programmer'
+      'A Pomodoro-style timer with session tracking. Great practice for React state, custom hooks, and accessibility basics.',
+    tags: ['React', 'Hooks', 'Accessibility'],
+    link: 'https://github.com/epritesh/focus-timer'
   }
 ]
 
 const skillDomains = [
   {
     icon: Cpu,
-    title: 'Frontend Systems',
-    items: ['React 18+', 'TypeScript', 'State charts', 'Design systems', 'Accessibility audits']
+    title: 'Frontend Foundations',
+    items: ['Semantic HTML', 'Modern CSS', 'Responsive layouts', 'JavaScript fundamentals']
   },
   {
     icon: Cloud,
-    title: 'Cloud & Edge',
-    items: ['Vercel', 'AWS Lambda', 'Cloudflare Workers', 'Supabase', 'CI/CD automation']
+    title: 'React Basics',
+    items: ['Hooks & state', 'Component composition', 'Client-side routing', 'Working with APIs']
   },
   {
     icon: Layers,
-    title: 'Backend Services',
-    items: ['Node.js', 'Fastify', 'tRPC', 'Prisma', 'Event-driven workflows']
+    title: 'Backend Curiosity',
+    items: ['Node.js fundamentals', 'Express REST endpoints', 'Supabase & Firebase basics']
   },
   {
     icon: Rocket,
-    title: 'Product Velocity',
-    items: ['Lean discovery', 'OKR facilitation', 'Experiment design', 'Tech mentoring']
+    title: 'Career Skills',
+    items: ['Pair programming', 'Writing learning notes', 'Asking good questions', 'Planning learning goals']
   }
 ]
 
 const timeline = [
   {
-    period: '2023 — Present',
-    role: 'Senior Frontend Engineer · Aurora Analytics',
+    period: '2024 — Present',
+    role: 'Self-Taught Frontend Learner',
     bullets: [
-      'Led rewrite to Vite + React Server Components; cut cold-start by 42%.',
-      'Built design tokens pipeline syncing Figma and Storybook automatically.',
-      'Mentored 4 engineers, introduced quarterly accessibility audits.'
-    ]
-  },
-  {
-    period: '2020 — 2023',
-    role: 'Full-Stack Engineer · CloudFlux',
-    bullets: [
-      'Shipped observability explorer ingesting 4M events/min with sub-second drilldowns.',
-      'Authored internal CLI tooling adopted by 6 squads and platform SRE team.',
-      'Created feature flag heuristics that reduced incident rollback time by 60%.'
+      'Working through The Odin Project and Scrimba Frontend Developer Path.',
+      'Building project-based learning goals and sharing write-ups on Dev.to.',
+      'Taking part in community code reviews and Discord study sessions.'
     ]
   }
 ]
 
 const learningLog = [
   {
-    title: 'Bringing streaming UX to marketing dashboards',
-    date: 'Aug 2025',
-    link: 'https://dev.to/epritesh/streaming-dashboard-ux'
+    title: 'What I learned rebuilding my portfolio with Vite',
+    date: 'Sep 2025',
+    link: 'https://dev.to/epritesh/beginner-portfolio-lessons'
   },
   {
-    title: 'Modern test strategy for component-driven teams',
+    title: 'React hooks finally make sense',
+    date: 'Jul 2025',
+    link: 'https://dev.to/epritesh/hooks-clicked'
+  },
+  {
+    title: 'CSS layout tricks from 30 days of practice',
     date: 'May 2025',
-    link: 'https://dev.to/epritesh/test-strategy'
-  },
-  {
-    title: 'Avoiding the state machine anti-pattern trap',
-    date: 'Jan 2025',
-    link: 'https://dev.to/epritesh/state-machines'
+    link: 'https://dev.to/epritesh/css-layout-tricks'
   }
 ]
 
 const certifications = [
   {
-    title: 'AWS Certified Developer – Associate',
-    issuer: 'Amazon Web Services',
-    year: '2024'
+    title: 'Scrimba Frontend Developer Career Path',
+    issuer: 'Scrimba',
+    year: 'In progress'
   },
   {
-    title: 'Google Cloud Professional Cloud Developer',
-    issuer: 'Google Cloud',
-    year: '2023'
+    title: 'The Odin Project - Foundations',
+    issuer: 'The Odin Project',
+    year: '2024'
+  }
+]
+
+const highlightCards = [
+  {
+    title: '6 projects shipped',
+    detail: 'Personal practice apps deployed to Vercel and iterated from feedback.'
+  },
+  {
+    title: '120-day streak',
+    detail: 'Committed code or notes every day to build consistency and muscle memory.'
+  },
+  {
+    title: 'First OSS contribution',
+    detail: 'Fixed a documentation typo and added examples to an open-source React component library.'
   }
 ]
 
@@ -158,20 +165,20 @@ function App() {
         <div className="container mx-auto px-6 py-10 flex flex-wrap items-center justify-between gap-6">
           <div>
             <span className="inline-flex items-center gap-2 text-sm uppercase tracking-[0.2em] text-brand-cyan font-semibold">
-              <Code2 size={16} /> Pritesh · Software Engineer
+              <Code2 size={16} /> Pritesh · Junior Developer in Training
             </span>
             <h1 className="text-3xl sm:text-4xl font-bold mt-3 max-w-xl leading-tight">
-              Building fast, resilient product experiences for data-heavy teams.
+              Learning to build friendly, reliable web experiences one project at a time.
             </h1>
             <p className="mt-4 max-w-2xl text-base sm:text-lg text-slate-400">
-              I partner with product, design, and platform teams to deliver thoughtful developer platforms, observability tools, and delightful frontend systems.
+              I am an aspiring frontend developer focused on React, modern CSS, and collaborative learning. I document what I learn, seek feedback often, and enjoy pairing with other beginners.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <a
                 className="px-5 py-2.5 rounded-full bg-brand-cyan text-slate-950 font-medium shadow hover:-translate-y-0.5 transition-transform"
                 href="mailto:epritesh@gmail.com"
               >
-                Book a pairing session
+                Say hello
               </a>
               <a
                 className={classNames('px-5 py-2.5 rounded-full border font-medium transition-colors', accentBorder)}
@@ -198,8 +205,8 @@ function App() {
                 isDarkMode ? 'border-slate-800 bg-white/5' : 'border-white/70 bg-white/60'
               )}
             >
-              <div className="font-semibold text-sm text-brand-cyan">Availability</div>
-              <div>Accepting part-time consulting for DX tooling & data viz.</div>
+              <div className="font-semibold text-sm text-brand-cyan">Goal</div>
+              <div>Seeking mentorship, internships, or junior-friendly teams.</div>
             </div>
           </div>
         </div>
@@ -207,18 +214,9 @@ function App() {
 
       <main className="relative z-10 container mx-auto px-6 py-16 space-y-20">
         <section>
-          <h2 className="section-title">Impact Snapshots</h2>
+          <h2 className="section-title">Learning Wins</h2>
           <div className="grid gap-6 md:grid-cols-3">
-            {[{
-              title: '42% faster builds',
-              detail: 'Re-architected modular build pipeline with Vite + PNPM workspaces.'
-            }, {
-              title: '99.95% uptime',
-              detail: 'Rolled out synthetic monitoring with GitOps rollbacks and incident runbooks.'
-            }, {
-              title: 'Mentored 12 devs',
-              detail: 'Facilitated weekly architecture reviews and pairing rotations.'
-            }].map((card) => (
+            {highlightCards.map((card) => (
               <div key={card.title} className={classNames(cardClasses, 'shadow-sm')}>
                 <h3 className="text-xl font-semibold">{card.title}</h3>
                 <p className="mt-3 text-sm text-slate-400">{card.detail}</p>
@@ -228,7 +226,7 @@ function App() {
         </section>
 
         <section>
-          <h2 className="section-title">Selected Projects</h2>
+          <h2 className="section-title">Practice Projects</h2>
           <div className="grid gap-6">
             {primaryProjects.map((project) => (
               <div key={project.title} className={classNames(cardClasses, 'flex flex-col md:flex-row md:items-start md:justify-between gap-6')}>
@@ -255,7 +253,7 @@ function App() {
                   rel="noreferrer"
                   className="self-start inline-flex items-center gap-2 text-sm font-medium text-brand-cyan hover:underline"
                 >
-                  Explore repo <ExternalLink size={16} />
+                  View code <ExternalLink size={16} />
                 </a>
               </div>
             ))}
@@ -263,7 +261,7 @@ function App() {
         </section>
 
         <section>
-          <h2 className="section-title">Expertise</h2>
+          <h2 className="section-title">Skills In Progress</h2>
           <div className="grid gap-6 md:grid-cols-2">
             {skillDomains.map((domain) => (
               <div key={domain.title} className={cardClasses}>
@@ -284,7 +282,7 @@ function App() {
         </section>
 
         <section>
-          <h2 className="section-title">Recent Roles</h2>
+          <h2 className="section-title">Current Journey</h2>
           <div className="space-y-6">
             {timeline.map((entry) => (
               <div key={entry.role} className={cardClasses}>
@@ -306,7 +304,7 @@ function App() {
 
         <section>
           <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-            <h2 className="section-title">Learning Log</h2>
+            <h2 className="section-title">Learning Notes</h2>
             <a
               href="https://dev.to/epritesh"
               className="inline-flex items-center gap-2 text-sm font-medium text-brand-cyan hover:underline"
@@ -336,7 +334,7 @@ function App() {
         </section>
 
         <section>
-          <h2 className="section-title">Credentials</h2>
+          <h2 className="section-title">Learning Milestones</h2>
           <div className="grid gap-4 md:grid-cols-2">
             {certifications.map((cert) => (
               <div
@@ -365,9 +363,9 @@ function App() {
             )}
           >
             <div>
-              <h2 className="text-2xl font-semibold">Let’s ship something together.</h2>
+              <h2 className="text-2xl font-semibold">Let’s learn and build together.</h2>
               <p className="mt-3 text-sm text-slate-400 max-w-xl">
-                I love helping teams untangle complex UX flows, harden their build pipelines, and level up developer experience. If you have a challenge in that space, reach out.
+                I am looking for mentorship, code reviews, and junior-friendly opportunities. If you have advice, project ideas, or need a motivated teammate, I would love to chat.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
@@ -400,7 +398,7 @@ function App() {
 
       <footer className="relative z-10 border-t border-white/5 py-8">
         <div className="container mx-auto px-6 text-sm text-slate-500">
-          Built with React, Vite, and TailwindCSS. Deployed on Vercel.
+          Built while learning React, Vite, and TailwindCSS. Deployed on Vercel.
         </div>
       </footer>
     </div>

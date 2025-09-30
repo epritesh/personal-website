@@ -1,13 +1,13 @@
-# Pritesh · Software Engineering Portfolio
+# Pritesh · Beginner Developer Portfolio
 
-This Vite + React single-page site showcases engineering impact, selected projects, and writing highlights for a senior front-end/product engineer. It is optimised for a modern developer aesthetic with TailwindCSS and Lucide icons, and deploys cleanly to Vercel.
+This Vite + React single-page site follows my journey as an aspiring front-end developer. It highlights beginner-friendly projects, learning logs, and the skills I am actively practising. It is optimised for a modern developer aesthetic with TailwindCSS and Lucide icons, and deploys cleanly to Vercel.
 
 > The previous **Daily Vedanta Inspiration** experience now lives on the `daily-vedanta` branch. Deploy that branch if you want the spiritual experience instead of the portfolio.
 
 ## ✨ Highlights
 
 - Hero section with availability CTA and quick theme toggle.
-- Impact snapshots, project cards, skill domains, and recent-role timeline.
+- Learning wins cards, beginner-friendly project summaries, skills-in-progress grids, and a simple learning timeline.
 - Learning log tiles linked to Dev.to, plus certification badges.
 - Contact panel with quick links to email, LinkedIn, and GitHub.
 - Light and dark palettes with subtle gradient ornaments defined via Tailwind utilities.
