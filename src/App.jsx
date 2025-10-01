@@ -1,4 +1,4 @@
-
+﻿
 import { useState } from 'react'
 import {
   Github,
@@ -65,7 +65,7 @@ const skillDomains = [
 
 const timeline = [
   {
-    period: '2024 — Present',
+    period: '2024 â€” Present',
     role: 'Self-Taught Frontend Learner',
     bullets: [
       'Working through The Odin Project and Scrimba Frontend Developer Path.',
@@ -79,17 +79,17 @@ const learningLog = [
   {
     title: 'What I learned rebuilding my portfolio with Vite',
     date: 'Sep 2025',
-    link: 'https://dev.to/epritesh/beginner-portfolio-lessons'
+    link: 'https://github.com/epritesh/learning-notes/blob/main/beginner-portfolio-lessons.md'
   },
   {
     title: 'React hooks finally make sense',
     date: 'Jul 2025',
-    link: 'https://dev.to/epritesh/hooks-clicked'
+    link: 'https://github.com/epritesh/learning-notes/blob/main/hooks-clicked.md'
   },
   {
     title: 'CSS layout tricks from 30 days of practice',
     date: 'May 2025',
-    link: 'https://dev.to/epritesh/css-layout-tricks'
+    link: 'https://github.com/epritesh/learning-notes/blob/main/css-layout-tricks.md'
   }
 ]
 
@@ -165,7 +165,7 @@ function App() {
         <div className="container mx-auto px-6 py-10 flex flex-wrap items-center justify-between gap-6">
           <div>
             <span className="inline-flex items-center gap-2 text-sm uppercase tracking-[0.2em] text-brand-cyan font-semibold">
-              <Code2 size={16} /> Pritesh · Junior Developer in Training
+              <Code2 size={16} /> Pritesh Â· Junior Developer in Training
             </span>
             <h1 className="text-3xl sm:text-4xl font-bold mt-3 max-w-xl leading-tight">
               Learning to build friendly, reliable web experiences one project at a time.
@@ -273,7 +273,7 @@ function App() {
                 </div>
                 <ul className="mt-4 space-y-2 text-sm text-slate-400">
                   {domain.items.map((item) => (
-                    <li key={item}>• {item}</li>
+                    <li key={item}>â€¢ {item}</li>
                   ))}
                 </ul>
               </div>
@@ -294,7 +294,7 @@ function App() {
                 </div>
                 <ul className="mt-4 space-y-2 text-sm text-slate-400">
                   {entry.bullets.map((bullet) => (
-                    <li key={bullet}>• {bullet}</li>
+                    <li key={bullet}>â€¢ {bullet}</li>
                   ))}
                 </ul>
               </div>
@@ -306,7 +306,7 @@ function App() {
           <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
             <h2 className="section-title">Learning Notes</h2>
             <a
-              href="https://dev.to/epritesh"
+              href="https://github.com/epritesh/learning-notes"
               className="inline-flex items-center gap-2 text-sm font-medium text-brand-cyan hover:underline"
               target="_blank"
               rel="noreferrer"
@@ -346,7 +346,7 @@ function App() {
                 </div>
                 <div>
                   <div className="font-semibold">{cert.title}</div>
-                  <div className="text-xs text-slate-400">{cert.issuer} · {cert.year}</div>
+                  <div className="text-xs text-slate-400">{cert.issuer} Â· {cert.year}</div>
                 </div>
               </div>
             ))}
@@ -363,7 +363,7 @@ function App() {
             )}
           >
             <div>
-              <h2 className="text-2xl font-semibold">Let’s learn and build together.</h2>
+              <h2 className="text-2xl font-semibold">Letâ€™s learn and build together.</h2>
               <p className="mt-3 text-sm text-slate-400 max-w-xl">
                 I am looking for mentorship, code reviews, and junior-friendly opportunities. If you have advice, project ideas, or need a motivated teammate, I would love to chat.
               </p>
@@ -406,3 +406,4 @@ function App() {
 }
 
 export default App
+
