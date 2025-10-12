@@ -21,7 +21,8 @@ const primaryProjects = [
       'A markdown-powered notebook I built to log daily lessons, useful code snippets, and questions for mentors.',
     tags: ['React', 'Markdown', 'LocalStorage'],
     link: 'https://github.com/epritesh/dev-journal',
-    live: 'https://dev-journal-i7ms-kwdpp8kle-epritesh-e0b412e7.vercel.app'
+    live: 'https://dev-journal-i7ms-kwdpp8kle-epritesh-e0b412e7.vercel.app',
+    screenshot: '/screenshots/dev-journal-i7ms-kwdpp8kle-epritesh-e0b412e7.vercel.app_.png'
   },
   {
     title: 'Weather Dashboard',
@@ -29,7 +30,8 @@ const primaryProjects = [
       'Fetches live OpenWeather data, shows responsive cards, and helped me learn data fetching, loaders, and error states.',
     tags: ['Vite', 'TailwindCSS', 'REST APIs'],
     link: 'https://github.com/epritesh/weather-dashboard',
-    live: 'https://weather-dashboard-mrd8bzhu3-epritesh-e0b412e7.vercel.app'
+    live: 'https://weather-dashboard-mrd8bzhu3-epritesh-e0b412e7.vercel.app',
+    screenshot: '/screenshots/weather-dashboard-mrd8bzhu3-epritesh-e0b412e7.vercel.app_.png'
   },
   {
     title: 'Focus Timer',
@@ -37,7 +39,8 @@ const primaryProjects = [
       'A Pomodoro-style timer with session tracking. Great practice for React state, custom hooks, and accessibility basics.',
     tags: ['React', 'Hooks', 'Accessibility'],
     link: 'https://github.com/epritesh/focus-timer',
-    live: 'https://focus-timer-5cmioremj-epritesh-e0b412e7.vercel.app'
+    live: 'https://focus-timer-5cmioremj-epritesh-e0b412e7.vercel.app',
+    screenshot: '/screenshots/focus-timer-5cmioremj-epritesh-e0b412e7.vercel.app_.png'
   }
 ]
 
@@ -217,13 +220,29 @@ function App() {
           <h2 className="section-title">Practice Projects</h2>
           <div className="grid gap-6">
             {primaryProjects.map((project) => (
-              <div key={project.title} className={classNames(cardClasses, 'flex flex-col md:flex-row md:items-start md:justify-between gap-6')}>
-                <div className="space-y-3">
-                  <h3 className="text-2xl font-semibold">{project.title}</h3>
-                  <p className="text-slate-400 text-sm leading-relaxed">{project.description}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {project.tags.map((tag) => (
-                      <span
+              <div key={project.title} className={classNames(cardClasses, 'space-y-6')}>
+                {project.screenshot && (
+                  <figure
+                    className={classNames(
+                      'overflow-hidden rounded-2xl border',
+                      isDarkMode ? 'border-slate-800/60 bg-slate-900/40' : 'border-slate-200 bg-white'
+                    )}
+                  >
+                    <img
+                      src={project.screenshot}
+                      alt={`Screenshot of ${project.title}`}
+                      className="w-full object-cover"
+                      loading="lazy"
+                    />
+                  </figure>
+                )}
+                <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+                  <div className="space-y-3">
+                    <h3 className="text-2xl font-semibold">{project.title}</h3>
+                    <p className="text-slate-400 text-sm leading-relaxed">{project.description}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {project.tags.map((tag) => (
+                        <span
                         key={tag}
                         className={classNames(
                           'px-3 py-1 rounded-full text-xs font-medium',
@@ -232,28 +251,29 @@ function App() {
                       >
                         {tag}
                       </span>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
-                <div className="flex flex-col gap-3 self-start">
-                  {project.live && (
+                  <div className="flex flex-col gap-3 self-start">
+                    {project.live && (
+                      <a
+                        href={project.live}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-2 rounded-full border border-brand-cyan/40 px-4 py-2 text-sm font-medium text-brand-cyan hover:border-brand-cyan/80"
+                      >
+                        View live demo <ExternalLink size={16} />
+                      </a>
+                    )}
                     <a
-                      href={project.live}
+                      href={project.link}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-2 rounded-full border border-brand-cyan/40 px-4 py-2 text-sm font-medium text-brand-cyan hover:border-brand-cyan/80"
+                      className="inline-flex items-center gap-2 text-sm font-medium text-brand-cyan hover:underline"
                     >
-                      View live demo <ExternalLink size={16} />
+                      View code <ExternalLink size={16} />
                     </a>
-                  )}
-                  <a
-                    href={project.link}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 text-sm font-medium text-brand-cyan hover:underline"
-                  >
-                    View code <ExternalLink size={16} />
-                  </a>
+                  </div>
                 </div>
               </div>
             ))}
