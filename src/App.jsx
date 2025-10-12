@@ -28,7 +28,8 @@ const primaryProjects = [
     description:
       'Fetches live OpenWeather data, shows responsive cards, and helped me learn data fetching, loaders, and error states.',
     tags: ['Vite', 'TailwindCSS', 'REST APIs'],
-    link: 'https://github.com/epritesh/weather-dashboard'
+    link: 'https://github.com/epritesh/weather-dashboard',
+    live: 'https://weather-dashboard-mrd8bzhu3-epritesh-e0b412e7.vercel.app'
   },
   {
     title: 'Focus Timer',
@@ -246,14 +247,26 @@ function App() {
                     ))}
                   </div>
                 </div>
-                <a
-                  href={project.link}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="self-start inline-flex items-center gap-2 text-sm font-medium text-brand-cyan hover:underline"
-                >
-                  View code <ExternalLink size={16} />
-                </a>
+                <div className="flex flex-col gap-3 self-start">
+                  {project.live && (
+                    <a
+                      href={project.live}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 rounded-full border border-brand-cyan/40 px-4 py-2 text-sm font-medium text-brand-cyan hover:border-brand-cyan/80"
+                    >
+                      View live demo <ExternalLink size={16} />
+                    </a>
+                  )}
+                  <a
+                    href={project.link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 text-sm font-medium text-brand-cyan hover:underline"
+                  >
+                    View code <ExternalLink size={16} />
+                  </a>
+                </div>
               </div>
             ))}
           </div>
