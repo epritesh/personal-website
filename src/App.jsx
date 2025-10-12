@@ -287,7 +287,7 @@ function App() {
                 </div>
                 <ul className="mt-4 space-y-2 text-sm text-slate-400">
                   {domain.items.map((item) => (
-                    <li key={item}>â€¢ {item}</li>
+                    <li key={item}>&bull; {item}</li>
                   ))}
                 </ul>
               </div>
@@ -308,7 +308,7 @@ function App() {
                 </div>
                 <ul className="mt-4 space-y-2 text-sm text-slate-400">
                   {entry.bullets.map((bullet) => (
-                    <li key={bullet}>â€¢ {bullet}</li>
+                    <li key={bullet}>&bull; {bullet}</li>
                   ))}
                 </ul>
               </div>
