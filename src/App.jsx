@@ -21,7 +21,8 @@ const primaryProjects = [
     description:
       'A markdown-powered notebook I built to log daily lessons, useful code snippets, and questions for mentors.',
     tags: ['React', 'Markdown', 'LocalStorage'],
-    link: 'https://github.com/epritesh/dev-journal'
+    link: 'https://github.com/epritesh/dev-journal',
+    live: 'https://dev-journal-i7ms-kwdpp8kle-epritesh-e0b412e7.vercel.app'
   },
   {
     title: 'Weather Dashboard',
