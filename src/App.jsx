@@ -205,18 +205,6 @@ function App() {
 
       <main className="relative z-10 container mx-auto px-6 py-16 space-y-20">
         <section>
-          <h2 className="section-title">Learning Wins</h2>
-          <div className="grid gap-6 md:grid-cols-3">
-            {highlightCards.map((card) => (
-              <div key={card.title} className={classNames(cardClasses, 'shadow-sm')}>
-                <h3 className="text-xl font-semibold">{card.title}</h3>
-                <p className="mt-3 text-sm text-slate-400">{card.detail}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section>
           <h2 className="section-title">Practice Projects</h2>
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {primaryProjects.map((project) => (
