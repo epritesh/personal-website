@@ -11,8 +11,7 @@ import {
   Code2,
   Layers,
   Cloud,
-  Calendar,
-  Award
+  Calendar
 } from 'lucide-react'
 
 const primaryProjects = [
@@ -92,19 +91,6 @@ const learningLog = [
     title: 'CSS layout tricks from 30 days of practice',
     date: 'May 2025',
     link: 'https://github.com/epritesh/learning-notes/blob/main/css-layout-tricks.md'
-  }
-]
-
-const certifications = [
-  {
-    title: 'Scrimba Frontend Developer Career Path',
-    issuer: 'Scrimba',
-    year: 'In progress'
-  },
-  {
-    title: 'The Odin Project - Foundations',
-    issuer: 'The Odin Project',
-    year: '2024'
   }
 ]
 
@@ -348,26 +334,6 @@ function App() {
         </section>
 
         <section>
-          <h2 className="section-title">Learning Milestones</h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            {certifications.map((cert) => (
-              <div
-                key={cert.title}
-                className={classNames('rounded-2xl border p-5 flex items-center gap-3', isDarkMode ? 'border-slate-800 bg-slate-900/80' : 'border-slate-200 bg-white')}
-              >
-                <div className="p-2 rounded-xl bg-brand-cyan/10 text-brand-cyan">
-                  <Award size={20} />
-                </div>
-                <div>
-                  <div className="font-semibold">{cert.title}</div>
-                  <div className="text-xs text-slate-400">{cert.issuer} Â· {cert.year}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section>
           <div
             className={classNames(
               'rounded-2xl border p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6',
@@ -377,7 +343,7 @@ function App() {
             )}
           >
             <div>
-              <h2 className="text-2xl font-semibold">Letâ€™s learn and build together.</h2>
+              <h2 className="text-2xl font-semibold">Let’s learn and build together.</h2>
               <p className="mt-3 text-sm text-slate-400 max-w-xl">
                 I am looking for mentorship, code reviews, and junior-friendly opportunities. If you have advice, project ideas, or need a motivated teammate, I would love to chat.
               </p>
