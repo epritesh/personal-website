@@ -1,4 +1,3 @@
-﻿
 import { useState } from 'react'
 import {
   Github,
@@ -65,7 +64,7 @@ const skillDomains = [
 
 const timeline = [
   {
-    period: '2024 â€” Present',
+    period: '2024 — Present',
     role: 'Self-Taught Frontend Learner',
     bullets: [
       'Working through The Odin Project and Scrimba Frontend Developer Path.',
@@ -406,4 +405,3 @@ function App() {
 }
 
 export default App
-
