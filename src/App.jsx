@@ -36,7 +36,8 @@ const primaryProjects = [
     description:
       'A Pomodoro-style timer with session tracking. Great practice for React state, custom hooks, and accessibility basics.',
     tags: ['React', 'Hooks', 'Accessibility'],
-    link: 'https://github.com/epritesh/focus-timer'
+    link: 'https://github.com/epritesh/focus-timer',
+    live: 'https://focus-timer-5cmioremj-epritesh-e0b412e7.vercel.app'
   }
 ]
 
