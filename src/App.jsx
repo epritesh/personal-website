@@ -218,20 +218,20 @@ function App() {
 
         <section>
           <h2 className="section-title">Practice Projects</h2>
-          <div className="grid gap-6">
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {primaryProjects.map((project) => (
-              <div key={project.title} className={classNames(cardClasses, 'space-y-6')}>
+              <div key={project.title} className={classNames(cardClasses, 'flex flex-col gap-6')}>
                 {project.screenshot && (
                   <figure
                     className={classNames(
-                      'overflow-hidden rounded-2xl border',
+                      'overflow-hidden rounded-2xl border aspect-[4/3]',
                       isDarkMode ? 'border-slate-800/60 bg-slate-900/40' : 'border-slate-200 bg-white'
                     )}
                   >
                     <img
                       src={project.screenshot}
                       alt={`Screenshot of ${project.title}`}
-                      className="w-full object-cover"
+                      className="h-full w-full object-cover"
                       loading="lazy"
                     />
                   </figure>
